@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>测试</title>
+	<style>
+		ul {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+		}
+
+		/* .container {
+			float: left;
+		} */
+
+		.item_container {
+			float: left;
+			position: relative;
+			max-height: 380px;
+			overflow: hidden;
+			overflow-y: auto;
+			border: 1px solid #ccc;
+		}
+
+		.item_content {
+			position: relative;
+			width: 760px;
+			overflow: hidden;
+		}
+
+		.item_content ul {
+			list-style: none;
+		}
+
+		.item_content ul li {
+			position: relative;
+			width: 150px;
+			height: 150px;
+			margin: 20px;
+			float: left;
+		}
+
+		.item_content .item {
+			text-align: center;
+			cursor: pointer;
+		}
+
+		.item_content .item img {
+			border-radius: 6px;
+		}
+
+		.close {
+			display: block;
+			width: 20px;
+			height: 20px;
+			top: 0;
+			right: 0;
+			z-index: 9999;
+			position: absolute;
+			text-align: center;
+			font-size: 16px;
+			cursor: pointer;
+			color: aliceblue
+		}
+	</style>
+</head>
+
+<body>
+	<div class="item_container">
+		<div class="item_content" id="imageChange">
+			<ul>
+				<li>
+					<div class="item"> <img src="http://www.jq22.com/img/cs/500x500-1.png" width="150" height="150">
+						<span onclick="removePicture(this)" class="rmPicture close">1×</span> </div>
+				</li>
+				<li>
+					<div class="item"> <img src="http://www.jq22.com/img/cs/500x500-2.png" width="150" height="150">
+						<span onclick="removePicture(this)" class="rmPicture close">2×</span> </div>
+				</li>
+				<li>
+					<div class="item"> <img src="http://www.jq22.com/img/cs/500x500-3.png" width="150" height="150">
+						<span onclick="removePicture(this)" class="rmPicture close">3×</span> </div>
+				</li>
+				<li>
+					<div class="item"> <img src="http://www.jq22.com/img/cs/500x500-4.png" width="150" height="150">
+						<span onclick="removePicture(this)" class="rmPicture close">4×</span> </div>
+				</li>
+				<li>
+					<div class="item"> <img src="http://www.jq22.com/img/cs/500x500-5.png" width="150" height="150">
+						<span onclick="removePicture(this)" class="rmPicture close">5×</span> </div>
+				</li>
+				<li>
+					<div class="item"> <img src="http://www.jq22.com/img/cs/500x500-6.png" width="150" height="150">
+						<span onclick="removePicture(this)" class="rmPicture close">6×</span> </div>
+				</li>
+				<li>
+					<div class="item"> <img src="http://www.jq22.com/img/cs/500x500-7.png" width="150" height="150">
+						<span onclick="removePicture(this)" class="rmPicture close">7×</span> </div>
+				</li>
+				<li>
+					<div class="item"> <img src="http://www.jq22.com/img/cs/500x500-8.png" width="150" height="150">
+						<span onclick="removePicture(this)" class="rmPicture close">8×</span> </div>
+				</li>
+				<li>
+					<div class="item"> <img src="http://www.jq22.com/img/cs/500x500-9.png" width="150" height="150">
+						<span onclick="removePicture(this)" class="rmPicture close">9×</span> </div>
+				</li>
+				<li>
+					<div class="item"> <img src="http://www.jq22.com/img/cs/500x500-7.png" width="150" height="150">
+						<span onclick="removePicture(this)" class="rmPicture close">10×</span> </div>
+				</li>
+				<li>
+					<div class="item"> <img src="http://www.jq22.com/img/cs/500x500-8.png" width="150" height="150">
+						<span onclick="removePicture(this)" class="rmPicture close">11×</span> </div>
+				</li>
+				<li>
+					<div class="item"> <img src="http://www.jq22.com/img/cs/500x500-9.png" width="150" height="150">
+						<span onclick="removePicture(this)" class="rmPicture close">12×</span> </div>
+				</li>
+			</ul>
+
+		</div>
+	</div>
+</body>
+
+</html>
+<!-- <script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script> -->
+<script src="https://cdn.bootcss.com/jquery/1.8.3/jquery.js"></script>
+<script>
+	$(function () {
+		function Pointer(x, y) {
+			this.x = x;
+			this.y = y;
+		}
+		function Position(left, top) {
+			this.left = left;
+			this.top = top;
+		}
+		$(".item_container .item").each(function (i) {
+			this.init = function () { // 初始化
+				this.box = $(this).parent();
+				$(this).attr("index", i).css({
+					position: "absolute",
+					left: this.box.position().left + 20,
+					top: this.box.position().top + 20
+				}).appendTo(".item_content");
+				this.drag();
+			};
+			this.move = function (callback) {  // 移动
+				$(this).stop(true).animate({
+					left: this.box.position().left + 20,
+					top: this.box.position().top + 20
+				}, 500, function () {
+					if (callback) {
+						callback.call(this);
+					}
+				});
+			};
+			this.collisionCheck = function () {
+				var currentItem = this;
+				var direction = null;
+				$(this).siblings(".item").each(function (index) {
+					if (
+						currentItem.currentPointer.x > this.box.offset().left &&
+						currentItem.currentPointer.y > this.box.offset().top &&
+						(currentItem.currentPointer.x < this.box.offset().left + this.box.width()) &&
+						(currentItem.currentPointer.y < this.box.offset().top + this.box.height())
+					) {
+						// 返回对象和方向
+						if (currentItem.box.offset().top < this.box.offset().top) {
+							direction = "down";
+						} else if (currentItem.box.offset().top > this.box.offset().top) {
+							direction = "up";
+						} else {
+							direction = "normal";
+						}
+						this.swap(currentItem, direction);
+					}
+				});
+			};
+			this.swap = function (currentItem, direction) { // 交换位置
+				if (this.moveing) return false;
+				var directions = {
+					normal: function () {
+						var saveBox = this.box;
+						this.box = currentItem.box;
+						currentItem.box = saveBox;
+						this.move();
+						$(this).attr("index", this.box.index());
+						$(currentItem).attr("index", currentItem.box.index());
+					},
+					down: function () {
+						// 移到下方
+						var box = this.box;
+						var node = this;
+						var startIndex = currentItem.box.index();
+						var endIndex = node.box.index();;
+						for (var i = endIndex; i > startIndex; i--) {
+							var prevNode = $(".item_content .item[index=" + (i - 1) + "]")[0];
+							node.box = prevNode.box;
+							$(node).attr("index", node.box.index());
+							node.move();
+							node = prevNode;
+						}
+						currentItem.box = box;
+						$(currentItem).attr("index", box.index());
+					},
+					up: function () {
+						// 移到上方
+						var box = this.box;
+						var node = this;
+						var startIndex = node.box.index();
+						var endIndex = currentItem.box.index();;
+						for (var i = startIndex; i < endIndex; i++) {
+							var nextNode = $(".item_content .item[index=" + (i + 1) + "]")[0];
+							node.box = nextNode.box;
+							$(node).attr("index", node.box.index());
+							node.move();
+							node = nextNode;
+						}
+						currentItem.box = box;
+						$(currentItem).attr("index", box.index());
+					}
+				}
+				directions[direction].call(this);
+			};
+			this.drag = function () { // 拖拽
+				var oldPosition = new Position();
+				var oldPointer = new Pointer();
+				var isDrag = false;
+				var currentItem = null;
+				$(this).mousedown(function (e) {
+					e.preventDefault();
+
+					oldPosition.left = $(this).position().left;
+					oldPosition.top = $(this).position().top;
+					oldPointer.x = e.pageX;
+					oldPointer.y = e.pageY;
+					isDrag = true;
+
+					currentItem = this;
+					currentItem.oldPointer = oldPointer;
+
+				});
+				$(document).mousemove(function (e) {
+					var currentPointer = new Pointer(e.pageX, e.pageY);
+					if (!isDrag) return false;
+					$(currentItem).css({
+						"opacity": "0.8",
+						"z-index": 999
+					});
+					var left = currentPointer.x - oldPointer.x + oldPosition.left;
+					var top = currentPointer.y - oldPointer.y + oldPosition.top;
+					$(currentItem).css({
+						left: left,
+						top: top
+					});
+					currentItem.currentPointer = currentPointer;
+					// 开始交换位置
+
+					currentItem.collisionCheck();
+
+
+				});
+				$(document).mouseup(function () {
+					if (!isDrag) return false;
+					isDrag = false;
+					currentItem.move(function () {
+						$(this).css({
+							"opacity": "1",
+							"z-index": 0
+						});
+					});
+				});
+			}
+			this.init();
+		});
+	});
+</script>

@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>OCR上传</title>
+    <link rel="stylesheet" href="./layui/css/layui.css">
+    <style type="text/css">
+        .ocr-upload-dialog {
+            position: relative;
+            padding: 10px 0 100px;
+        }
+
+        .ocr-upload-dialog .content {
+            padding: 0 20px;
+        }
+
+        .ocr-upload-dialog .tips-info {
+            font-size: 14px;
+            line-height: 24px;
+            color: red;
+        }
+
+        .ocr-upload-dialog .ocr-upload-container {
+            position: relative;
+            max-height: 372px;
+            margin-top: 20px;
+            overflow: hidden;
+            overflow-y: auto;
+        }
+
+        .ocr-upload-dialog .ocr-upload-con {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ocr-upload-dialog .ocr-upload-con ul li {
+            position: relative;
+            width: 190px;
+            height: 186px;
+            float: left;
+        }
+
+        .ocr-upload-dialog .ocr-upload-item {
+            width: 180px;
+            margin: 0 5px;
+            overflow: hidden;
+        }
+
+        .ocr-upload-dialog .ocr-upload-index {
+            float: left;
+            width: 30px;
+            font-size: 16px;
+            line-height: 150px;
+            text-align: center;
+            cursor: all-scroll;
+        }
+
+        .ocr-upload-dialog .ocr-upload-box {
+            /* float: left; */
+            margin-left: 30px;
+        }
+
+        .ocr-upload-dialog .ocr-upload-box .ocr-upload-btn {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            line-height: 150px;
+            text-align: center;
+            /* border: 1px solid #ccc; */
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            cursor: pointer;
+        }
+
+        .ocr-upload-dialog .ocr-upload-box .ocr-upload-btn img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .ocr-upload-dialog .ocr-upload-box .ocr-upload-btn i {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .ocr-upload-dialog .ocr-upload-box .ocr-upload-btn input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            /* width: 100%;
+            height: 100%; */
+            width: 0;
+            height: 0;
+            opacity: 0;
+            filter: Alpha(opacity=0);
+            cursor: pointer;
+            /* display: none; */
+        }
+
+        .ocr-upload-dialog .ocr-upload-box .ocr-templet-name {
+            font-size: 14px;
+            line-height: 36px;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .ocr-upload-dialog .ocr-bottom-btn {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 80px;
+            padding: 0 20px;
+            line-height: 80px;
+            text-align: right;
+            background-color: #eee;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+
+        body .layui-layer-page .layui-layer-content {
+            overflow: visible;
+        }
+
+        .templet-select-dialog {
+            position: relative;
+            height: 100px;
+            padding: 20px;
+        }
+
+        .templet-select-dialog .bottom-btn {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <button class="btn-upload">点击上传</button>
+    <div class="ocr-upload-dialog" style="display: none;">
+        <div class="content">
+            <div class="tips-info">
+                <p>请根据页码编号上传对应的图片</p>
+                <p>图片大小不超过4M，最长边不超过4096像素，请确保上传的模板图片字迹清晰，摆放端正。</p>
+                <p>拖动图片可以进行顺序调整</p>
+            </div>
+            <div class="ocr-upload-container">
+                <div class="ocr-upload-con">
+                    <ul>
+                        <li>
+                            <div class="ocr-upload-item">
+                                <div class="ocr-upload-index">1</div>
+                                <div class="ocr-upload-box">
+                                    <div class="ocr-upload-btn">
+                                        <!-- <i class="layui-icon layui-icon-add-1"></i> -->
+                                        <img src="./image/add.png" alt="">
+                                        <input type="file">
+                                    </div>
+                                    <div class="ocr-templet-name">模板名1</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="ocr-upload-item">
+                                <div class="ocr-upload-index">2</div>
+                                <div class="ocr-upload-box">
+                                    <div class="ocr-upload-btn">
+                                        <img src="./image/add.png" alt="">
+                                        <input type="file">
+                                    </div>
+                                    <div class="ocr-templet-name">模板名2</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="ocr-upload-item">
+                                <div class="ocr-upload-index">3</div>
+                                <div class="ocr-upload-box">
+                                    <div class="ocr-upload-btn">
+                                        <img src="./image/add.png" alt="">
+                                        <input type="file">
+                                    </div>
+                                    <div class="ocr-templet-name">模板名3</div>
+                                </div>
+                            </div>
+                        </li>
+                        <!-- <li>
+                            <div class="ocr-upload-item">
+                                <div class="ocr-upload-index">4</div>
+                                <div class="ocr-upload-box">
+                                    <div class="ocr-upload-btn">
+                                        <img src="./image/add.png" alt="">
+                                        <input type="file">
+                                    </div>
+                                    <div class="ocr-templet-name">模板名4</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="ocr-upload-item">
+                                <div class="ocr-upload-index">5</div>
+                                <div class="ocr-upload-box">
+                                    <div class="ocr-upload-btn">
+                                        <img src="./image/add.png" alt="">
+                                        <input type="file">
+                                    </div>
+                                    <div class="ocr-templet-name">模板名5</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="ocr-upload-item">
+                                <div class="ocr-upload-index">6</div>
+                                <div class="ocr-upload-box">
+                                    <div class="ocr-upload-btn">
+                                        <img src="./image/add.png" alt="">
+                                        <input type="file">
+                                    </div>
+                                    <div class="ocr-templet-name">模板名6</div>
+                                </div>
+                            </div>
+                        </li> -->
+                        <li>
+                            <div class="ocr-upload-item">
+                                <div class="ocr-upload-index">7</div>
+                                <div class="ocr-upload-box">
+                                    <div class="ocr-upload-btn btn-add">
+                                        <img src="./image/add.png" alt="">
+                                    </div>
+                                    <div class="ocr-templet-name">继续添加</div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="ocr-bottom-btn">
+            <button class="layui-btn layui-btn-normal">开始识别</button>
+        </div>
+    </div>
+    <div class="templet-select-dialog" style="display: none;">
+        <form class="layui-form" lay-filter="templetForm">
+            <select name="templetName" lay-verify="required">
+                <option value="">请选择OCR模板</option>
+                <option value="模板1">模板1</option>
+                <option value="模板2">模板2</option>
+                <option value="模板3">模板3</option>
+                <option value="模板4">模板4</option>
+                <option value="模板5">模板5</option>
+            </select>
+
+            <div class="bottom-btn layui-form-item">
+                <button class="layui-btn layui-btn-primary btn-cancel">取消</button>
+                <button class="layui-btn" lay-submit lay-filter="selectSubmit">确定</button>
+            </div>
+        </form>
+    </div>
+    <script src="./layui/layui.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/1.8.3/jquery.js"></script>
+    <script src="./js/jquery.ajaxfileupload.js"></script>
+    <script>
+        $(function () {
+            layui.use(['layer', 'form'], function () {
+                var layer = layui.layer,
+                    form = layui.form;
+
+                function resetIndex() {
+                    $('.ocr-upload-item[index]').each(function () {
+                        $(this).find('.ocr-upload-index').text(parseInt($(this).attr("index")) + 1)
+                    })
+                }
+
+                $('.ocr-upload-dialog').on('click', '.ocr-upload-box .ocr-upload-btn:not(.btn-add)', function () {
+                    $(this).find('input[type="file"]')[0].click();
+                })
+
+                $('.ocr-upload-dialog .ocr-upload-box .btn-add').click(function () {
+                    var _this = this;
+
+                    form.val("templetForm", {
+                        "templetName": ""
+                    });
+
+                    var layerIndex = layer.open({
+                        type: 1,
+                        title: '请选择要添加的OCR模板',
+                        content: $('.templet-select-dialog'),
+                        area: ['400px', 'auto'],
+                        success: function () {
+                            form.on('submit(selectSubmit)', function (data) {
+                                $(_this).parents('.ocr-upload-item').siblings('ul').find('li:last').before('<li>' +
+                                    '<div class="ocr-upload-item">' +
+                                    '<div class="ocr-upload-index"></div>' +
+                                    '<div class="ocr-upload-box">' +
+                                    '<div class="ocr-upload-btn">' +
+                                    '<!-- <i class="layui-icon layui-icon-add-1"></i> -->' +
+                                    '<img src="./image/add.png" alt="">' +
+                                    '<input type="file">' +
+                                    '</div>' +
+                                    '<div class="ocr-templet-name">' + data.field.templetName + '</div>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</li>')
+                                dragInit();
+                                resetIndex();
+                                layer.close(layerIndex);
+
+                                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                            });
+                            $('.templet-select-dialog').on('click', '.btn-cancel', function () {
+                                layer.close(layerIndex);
+                                return false;
+                            })
+                        }
+                    })
+                })
+
+
+                function Pointer(x, y) {
+                    this.x = x;
+                    this.y = y;
+                }
+                function Position(left, top) {
+                    this.left = left;
+                    this.top = top;
+                }
+                function dragInit() {
+                    $(".ocr-upload-container .ocr-upload-con .ocr-upload-item").each(function () {
+                        if (this.box) {
+                            $(this).appendTo(this.box);
+                        }
+                    })
+                    // $(".ocr-upload-container .ocr-upload-con ul").siblings().remove();
+                    $(".ocr-upload-container .ocr-upload-con ul li .ocr-upload-item").each(function (i) {
+                        this.init = function () { // 初始化
+                            // var $cloneHtml = $(this).clone(true).appendTo($(this).parent());
+                            this.box = $(this).parent();
+                            $(this).attr("index", i).css({
+                                position: "absolute",
+                                left: this.box.position().left,
+                                top: this.box.position().top
+                            }).show().appendTo(".ocr-upload-con");
+                            this.drag();
+                        };
+                        this.move = function (callback) {  // 移动
+                            $(this).stop(true).animate({
+                                left: this.box.position().left,
+                                top: this.box.position().top
+                            }, 500, function () {
+                                if (callback) {
+                                    callback.call(this);
+                                }
+                            });
+                        };
+                        this.collisionCheck = function () {
+                            var currentItem = this;
+                            var direction = null;
+                            $(this).siblings(".ocr-upload-item").each(function (index) {
+                                if (
+                                    currentItem.currentPointer.x > this.box.offset().left &&
+                                    currentItem.currentPointer.y > this.box.offset().top &&
+                                    (currentItem.currentPointer.x < this.box.offset().left + this.box.width()) &&
+                                    (currentItem.currentPointer.y < this.box.offset().top + this.box.height())
+                                ) {
+                                    // 返回对象和方向
+                                    if (currentItem.box.offset().top < this.box.offset().top) {
+                                        direction = "down";
+                                    } else if (currentItem.box.offset().top > this.box.offset().top) {
+                                        direction = "up";
+                                    } else {
+                                        direction = "normal";
+                                    }
+                                    this.swap(currentItem, direction);
+                                }
+                            });
+                        };
+                        this.swap = function (currentItem, direction) { // 交换位置
+                            if (this.moveing) return false;
+                            var directions = {
+                                normal: function () {
+                                    var saveBox = this.box;
+                                    this.box = currentItem.box;
+                                    currentItem.box = saveBox;
+                                    this.move();
+                                    $(this).attr("index", this.box.index());
+                                    $(currentItem).attr("index", currentItem.box.index());
+                                    resetIndex();
+                                },
+                                down: function () {
+                                    // 移到下方
+                                    var box = this.box;
+                                    var node = this;
+                                    var startIndex = currentItem.box.index();
+                                    var endIndex = node.box.index();;
+                                    for (var i = endIndex; i > startIndex; i--) {
+                                        var prevNode = $(".ocr-upload-con .ocr-upload-item[index=" + (i - 1) + "]")[0];
+                                        node.box = prevNode.box;
+                                        $(node).attr("index", node.box.index());
+                                        node.move();
+                                        node = prevNode;
+                                    }
+                                    currentItem.box = box;
+                                    $(currentItem).attr("index", box.index());
+                                    resetIndex();
+                                },
+                                up: function () {
+                                    // 移到上方
+                                    var box = this.box;
+                                    var node = this;
+                                    var startIndex = node.box.index();
+                                    var endIndex = currentItem.box.index();;
+                                    for (var i = startIndex; i < endIndex; i++) {
+                                        var nextNode = $(".ocr-upload-con .ocr-upload-item[index=" + (i + 1) + "]")[0];
+                                        node.box = nextNode.box;
+                                        $(node).attr("index", node.box.index());
+                                        node.move();
+                                        node = nextNode;
+                                    }
+                                    currentItem.box = box;
+                                    $(currentItem).attr("index", box.index());
+                                    resetIndex();
+                                }
+                            }
+                            directions[direction].call(this);
+                        };
+                        this.drag = function () { // 拖拽
+                            var oldPosition = new Position();
+                            var oldPointer = new Pointer();
+                            var currentItem = null;
+                            var isDrag = false;
+                            $(this).on('mousedown', function (e) {
+                                e.preventDefault();
+                                // debugger
+                                oldPosition.left = $(this).position().left;
+                                oldPosition.top = $(this).position().top;
+                                oldPointer.x = e.pageX;
+                                oldPointer.y = e.pageY;
+                                isDrag = true;
+
+                                currentItem = this;
+                                currentItem.oldPointer = oldPointer;
+
+                            });
+                            $(document).on('mousemove', function (e) {
+                                var currentPointer = new Pointer(e.pageX, e.pageY);
+                                if (!isDrag) return false;
+                                // debugger
+                                $(currentItem).css({
+                                    "opacity": "0.8",
+                                    "z-index": 999
+                                });
+                                var left = currentPointer.x - oldPointer.x + oldPosition.left;
+                                var top = currentPointer.y - oldPointer.y + oldPosition.top;
+                                $(currentItem).css({
+                                    left: left,
+                                    top: top
+                                });
+                                currentItem.currentPointer = currentPointer;
+                                // 开始交换位置
+
+                                currentItem.collisionCheck();
+                            });
+                            $(document).on('mouseup', function (e) {
+                                if (!isDrag) return false;
+                                // debugger
+                                isDrag = false;
+                                currentItem.move(function () {
+                                    $(this).css({
+                                        "opacity": "1",
+                                        "z-index": 0
+                                    });
+                                });
+                            });
+                        }
+                        this.init();
+                    });
+                }
+
+                $('.btn-upload').click(function () {
+                    layer.open({
+                        type: 1,
+                        title: '企业法人营业执照（内资公司）',
+                        content: $('.ocr-upload-dialog'),
+                        area: ['650px', 'auto'],
+                        success: function () {
+                            dragInit();
+                            $('input[type="file"]').ajaxfileupload({
+                                action: 'http://192.168.168.5:11121/fzlicense/TemporaryFile/UploadImage',
+                                params: {
+                                },
+                                onStart: function () {
+                                    if (false) return false; // cancels upload
+                                },
+                                onComplete: function (response) {
+                                    if (response.Key) {
+                                        $(this).siblings('img').attr("src", "http://192.168.168.5:11121/fzlicense/TemporaryFile/PreviewImage" + "?key=" + response.Value);
+                                    }
+                                    else {
+                                        alert(response.Value);
+                                    }
+                                },
+                                onCancel: function () {
+                                    console.log('no file selected');
+                                }
+                            });
+                        }
+                    });
+                })
+            });
+        });
+    </script>
+</body>
+
+</html>
